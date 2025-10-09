@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -17,40 +18,47 @@
     />
 
     <!--=============== CSS ===============-->
-    <link rel="stylesheet" href="assets/css/styles.css" />
+    <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}" />
 
     <title>Ecommerce Website</title>
   </head>
   <body>
     <!--=============== HEADER ===============-->
     <header class="header">
-      <div class="header__top">
-        <div class="header__container container">
-          <div class="header__contact">
-            <span>(+01) - 2345 - 6789</span>
-            <span>Our location</span>
+      {% if not request.user.is_authenticated %}
+          <div class="header__top">
+            <div class="header__container container">
+              <div class="header__contact">
+                <span>(+998)-91-667-2634</span>
+                <span>Our location</span>
+              </div>
+              <p class="header__alert-news">
+                Eng arzon mahsulotlar - faqat bizada!
+              </p>
+                <div>
+                    <a href="{% url 'login_user' %}" class="header_top-action">
+                      Log In /
+                    </a>
+                    <a href="{% url 'logout_user' %}" class="header_top-action">
+                      sign Up
+                    </a>
+                </div> 
+            </div>
           </div>
-          <p class="header__alert-news">
-            Super Values Deals - Save more coupons
-          </p>
-          <a href="login-register.html" class="header__top-action">
-            Log In / Sign Up
-          </a>
-        </div>
-      </div>
+      {% endif %}
 
       <nav class="nav container">
-        <a href="index.html" class="nav__logo">
+        <a href="{% url 'dashboard' %}" class="nav__logo">
           <img
             class="nav__logo-img"
-            src="assets/img/logo.svg"
+            src="{% static 'assets/img/logo.svg' %}"
             alt="website logo"
           />
         </a>
         <div class="nav__menu" id="nav-menu">
           <div class="nav__menu-top">
             <a href="index.html" class="nav__menu-logo">
-              <img src="./assets/img/logo.svg" alt="">
+              <img src="{% static 'assets/img/logo.svg' %}" alt="">
             </a>
             <div class="nav__close" id="nav-close">
               <i class="fi fi-rs-cross-small"></i>
@@ -58,43 +66,42 @@
           </div>
           <ul class="nav__list">
             <li class="nav__item">
-              <a href="index.html" class="nav__link active-link">Home</a>
+              <a href="{% url 'dashboard' %}" class="nav__link {% if request.path == '/' %} active-link {% endif %} ">Bosh sahifa</a>
             </li>
             <li class="nav__item">
-              <a href="shop.html" class="nav__link">Shop</a>
+              <a href="{% url 'shop' %}" class="nav__link {% if request.path == '/shop/' %} active-link {% endif %}">Mahsulotlar</a>
             </li>
             <li class="nav__item">
-              <a href="accounts.html" class="nav__link">My Account</a>
+              <a href="{% url 'profile' %}" class="nav__link {% if request.path == '/profile/' %} active-link {% endif %}">Profilim</a>
             </li>
-            <li class="nav__item">
-              <a href="compare.html" class="nav__link">Compare</a>
-            </li>
-            <li class="nav__item">
-              <a href="login-register.html" class="nav__link">Login</a>
-            </li>
+            {% if request.user.is_authenticated %}
+              <li class="nav__item">
+                <a href="{% url 'logout_user' %}" class="nav__link">Log Out</a>
+              </li>
+            {% endif %}
           </ul>
           <div class="header__search">
             <input
               type="text"
-              placeholder="Search For Items..."
+              placeholder="Mahsulotlarni bu yerdan qidiring..."
               class="form__input"
             />
             <button class="search__btn">
-              <img src="assets/img/search.png" alt="search icon" />
+              <img src="{% static 'assets/img/search.png' %}" alt="search icon" />
             </button>
           </div>
         </div>
         <div class="header__user-actions">
           <a href="wishlist.html" class="header__action-btn" title="Wishlist">
-            <img src="assets/img/icon-heart.svg" alt="" />
+            <img src="{% static 'assets/img/icon-heart.svg' %}" alt="" />
             <span class="count">3</span>
           </a>
           <a href="cart.html" class="header__action-btn" title="Cart">
-            <img src="assets/img/icon-cart.svg" alt="" />
+            <img src="{% static 'assets/img/icon-cart.svg' %}" alt="" />
             <span class="count">3</span>
           </a>
           <div class="header__action-btn nav__toggle" id="nav-toggle">
-            <img src="./assets//img/menu-burger.svg" alt="">
+            <img src="{% static './assets//img/menu-burger.svg' %}" alt="">
           </div>
         </div>
       </nav>
@@ -128,35 +135,35 @@
             <div class="footer__links flex">
               <a href="#">
                 <img
-                  src="./assets/img/icon-facebook.svg"
+                  src="{% static './assets/img/icon-facebook.svg' %}"
                   alt=""
                   class="footer__social-icon"
                 />
               </a>
               <a href="#">
                 <img
-                  src="./assets/img/icon-twitter.svg"
+                  src="{% static './assets/img/icon-twitter.svg' %}"
                   alt=""
                   class="footer__social-icon"
                 />
               </a>
               <a href="#">
                 <img
-                  src="./assets/img/icon-instagram.svg"
+                  src="{% static './assets/img/icon-instagram.svg' %}"
                   alt=""
                   class="footer__social-icon"
                 />
               </a>
               <a href="#">
                 <img
-                  src="./assets/img/icon-pinterest.svg"
+                  src="{% static './assets/img/icon-pinterest.svg' %}"
                   alt=""
                   class="footer__social-icon"
                 />
               </a>
               <a href="#">
                 <img
-                  src="./assets/img/icon-youtube.svg"
+                  src="{% static './assets/img/icon-youtube.svg' %}"
                   alt=""
                   class="footer__social-icon"
                 />
@@ -205,6 +212,6 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <!--=============== MAIN JS ===============-->
-    <script src="assets/js/main.js"></script>
+    <script src="{% static 'assets/js/main.js' %}"></script>
   </body>
 </html>

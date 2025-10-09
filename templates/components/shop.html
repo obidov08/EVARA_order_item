@@ -1,0 +1,75 @@
+{% load static %}
+<section class="products container section--lg">
+        <p class="total__products">mahsulotlar soni <span>{{products.count}}</span>ta</p>
+        <div class="products__container grid">
+          {% for product in products %} 
+              <div class="product__item">
+                <div class="product__banner">
+                    <a href="details.html" class="product__images">
+                      <img
+                        src="{{product.image.url}}"
+                        alt=""
+                        class="product__img default"
+                      />
+                    </a>
+                    <div class="product__actions">
+                      <a href="#" class="action__btn" aria-label="Quick View">
+                        <i class="fi fi-rs-eye"></i>
+                      </a>
+                      <a
+                        href="#"
+                        class="action__btn"
+                        aria-label="Add to Wishlist"
+                      >
+                        <i class="fi fi-rs-heart"></i>
+                      </a>
+                      <a href="#" class="action__btn" aria-label="Compare">
+                        <i class="fi fi-rs-shuffle"></i>
+                      </a>
+                    </div>
+                    {% if product.discount > 0 %}
+                        <div class="product__badge light-pink">-{{product.discount}}%</div>
+                    {% endif %}
+                </div>
+                <div class="product__content">
+                  <span class="product__category">{{product.category.name}}</span>
+                  <a href="details.html">
+                    <h3 class="product__title">{{product.name}}</h3>
+                  </a>
+                  <div class="product__rating">
+                    <i class="fi fi-rs-star"></i>
+                    <i class="fi fi-rs-star"></i>
+                    <i class="fi fi-rs-star"></i>
+                    <i class="fi fi-rs-star"></i>
+                    <i class="fi fi-rs-star"></i>
+                  </div>
+                  <div class="product__price flex">
+                    {% if product.discount_price %}
+                        <span class="new__price">${{product.discount.price}}</span>
+                        <span class="old__price">${{product.price}}</span>
+                    {% else %}
+                        <span class="new__price">${{product.price}}
+                    {% endif %}
+                  </div>
+                  <a
+                    href="#"
+                    class="action__btn cart__btn"
+                    aria-label="Add To Cart"
+                  >
+                    <i class="fi fi-rs-shopping-bag-add"></i>
+                  </a>
+                </div>
+              </div>
+          {% endfor %}
+        </div>
+        <ul class="pagination">
+          <li><a href="#" class="pagination__link active">01</a></li>
+          <li><a href="#" class="pagination__link">02</a></li>
+          <li><a href="#" class="pagination__link">03</a></li>
+          <li><a href="#" class="pagination__link">...</a></li>
+          <li><a href="#" class="pagination__link">16</a></li>
+          <li><a href="#" class="pagination__link icon">
+            <i class="fi-rs-angle-double-small-right"></i>
+          </a></li>
+        </ul>
+</section>
