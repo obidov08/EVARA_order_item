@@ -1,7 +1,8 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import render, redirect, get_object_or_404
 from shop.models import Category, Product
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 def dashboard(request):
     categories = Category.objects.all()
@@ -35,19 +36,27 @@ def login_register(request):
 
 def shop_page(request):
     products = Product.objects.all()
-    # discount_prices = {}
+    paginator = Paginator(products, 2)
 
-    # for product in products:
-    #     new_price = product.price - product.price*product.discount/100
-    #     discount_prices[product.pk] = new_price 
+    page = request.GET.get('page')
+
+    page_products = paginator.get_page(page)
 
     data = {
         "path": "Mahsulotlar",
-        "products": products,
-        # "discount_products": discount_prices
+        "products": page_products,
     }
     return render(request, "shop/shop.html", context=data)
 
+def category_products_with_id(request, category_id):
+    products = Product.objects.filter(category_id=category_id) 
+    category = get_object_or_404(Category, id=category_id)
+
+    data = {
+        "path": category.name,
+        "products": products,
+    }
+    return render(request, "shop/category_products.html", context=data)
 
 def wishilst(request):
     return render(request, "shop/wishlist.html")
