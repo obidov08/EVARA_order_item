@@ -1,10 +1,12 @@
 from django.urls import path
-from .views import dashboard, detail, accounts, cart, compare, login_register, shop_page, category_products_with_id, wishilst, profile_user, login_user, logout_user
+from .views import dashboard, detail, accounts, cart, compare, login_register, shop_page, category_products_with_id
+from .views import  wishilst, profile_user, login_user, logout_user, register_user
 from shop.views import shop_page
 
 urlpatterns = [
     path('', dashboard, name="dashboard"),
     path('detail/', detail, name="detail"),
+
     path('accounts/', accounts, name="accounts"),
     path('cart/', cart, name="cart"),
     path('compare/', compare, name="compare"),
@@ -13,6 +15,9 @@ urlpatterns = [
     path('category/<int:category_id>/', category_products_with_id, name="category_products"),
     path('whishlist/', wishilst, name="whishilst"),
     path('profile/', profile_user, name="profile"),
+    path('register/', register_user, name="register_user"),
+
+
     path('login/', login_user, name="login_user"),  
     path('logout/', logout_user, name="logout_user"),
 ]

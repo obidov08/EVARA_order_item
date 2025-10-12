@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from shop.models import Category, Product
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from .forms import LoginForm, RegisterForm
 
 def dashboard(request):
     categories = Category.objects.all()
@@ -31,7 +33,7 @@ def compare(request):
 
 
 def login_register(request):
-    return render(request, "shop/login-rehister.html")
+    return render(request, "shop/login-register.html")
 
 
 def shop_page(request):
@@ -70,19 +72,69 @@ def profile_user(request):
 
 
 def login_user(request):
-    data = {
-        "path": "Login"
-    }
-    if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
 
-        if user is not None:
-            login(request, user)
-            return redirect("dashboard")
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+
+            user = authenticate(request, username=username, password=password) 
+            if user is not None:
+                login(request, user)
+                return redirect("dashboard")
+        
+        else:
+            data = {
+                "path": "Login",
+                "form": form,
+            }
+            return render(request, "shop/login-register.html", context=data)
+        
+    form = LoginForm()
+
+    data = {
+                "path": "Login",
+                "form": form,
+            }
+    
     return render(request, "shop/login-register.html", context=data)
 
+        
 def logout_user(request):
     logout(request)
-    return redirect("login_user")
+    return redirect("dashboard")
+
+
+def register_user(request):
+
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+
+        if form.is_valid():
+            first_name = form.cleaned_data.get('first_name')
+            last_name = form.cleaned_data.get('last_name')
+            username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password')
+
+            user = User(first_name=first_name, last_name=last_name, username=username, email=email)
+            user.set_password(password)
+
+            user.save()
+            return redirect('login_user')
+        else:
+            data = {
+            "path": "Register",
+            "form": form
+        }
+        return render(request, "shop/register.html", context=data) 
+
+
+    form = RegisterForm()
+    data = {
+        "path": "Register",
+        "form": form,
+    }
+    return render(request, "shop/register.html", context=data)
