@@ -49,7 +49,7 @@
                   <span class="new__price">${{ product.price }}</span>
                 {% endif %}
               </div>
-              <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
+              <a href="#" class="action__btn cart__btn" aria-label="Add To Cart" data-product-id="{{product.id}}">
                 <i class="fi fi-rs-shopping-bag-add"></i>
               </a>
             </div>
@@ -81,3 +81,49 @@
       </div>
   {% endif %}
 </section>
+
+<script>
+    // Barcha cart tugmalariga listener qo'shish
+    document.querySelectorAll('.cart__btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault(); // Linkni ochilishini to'xtatish
+        
+        // Product ID ni olish (data atributdan)
+        const productId = this.getAttribute('data-product-id');
+        
+        // Agar product ID topilmasa
+        if (!productId) {
+          console.error('Product ID topilmadi!');
+          alert('Xatolik: Mahsulot ID topilmadi');
+          return;
+        }
+        
+        // Backend'ga so'rov yuborish
+        fetch(`/cart/add/${productId}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            // Agar CSRF token kerak bo'lsa:
+            // 'X-CSRFToken': getCookie('csrftoken')
+          },
+          // Agar qo'shimcha ma'lumot yuborish kerak bo'lsa:
+          // body: JSON.stringify({ quantity: 1 })
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Savatchaga qo\'shildi:', data);
+          
+          // Tugma animatsiyasi yoki xabar
+          this.classList.add('added');
+          setTimeout(() => this.classList.remove('added'), 1000);
+          
+          // Savatchadagi mahsulotlar sonini yangilash (agar kerak bo'lsa)
+          // updateCartCount(data.cart_count);
+        })
+        .catch(error => {
+          console.error('Xatolik:', error);
+          alert('Xatolik yuz berdi. Qayta urinib ko\'ring.');
+        });
+      });
+    });
+</script>

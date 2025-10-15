@@ -13,73 +13,31 @@
               </tr>
             </thead>
             <tbody>
+              {% for product in products %}
               <tr>
-                <td>
-                  <img
-                    src="{% static './assets//img/product-1-2.jpg' %}"
-                    alt=""
-                    class="table__img"
-                  />
-                </td>
-                <td>
-                  <h3 class="table__title">
-                    J.Crew Mercantile Women's Short-Sleeve
-                  </h3>
-                  <p class="table__description">
-                    Lorem ipsum dolor sit amet consectetur.
-                  </p>
-                </td>
-                <td>
-                  <span class="table__price">$110</span>
-                </td>
-                <td><input type="number" value="3" class="quantity" /></td>
-                <td><span class="subtotal">$220</span></td>
-                <td><i class="fi fi-rs-trash table__trash"></i></td>
+                    <td>
+                      <img
+                        src="{{product.image.url}}"
+                        alt=""
+                        class="table__img"
+                      />
+                    </td>
+                    <td>
+                      <h3 class="table__title">
+                          {{product.name}}
+                      </h3>
+                      <p class="table__description">
+                        Lorem ipsum dolor sit amet consectetur.
+                      </p>
+                    </td>
+                    <td>
+                      <span class="table__price">$110</span>
+                    </td>
+                    <td><input type="number" value="3" class="quantity" /></td>
+                    <td><span class="subtotal">$220</span></td>
+                    <td><i class="fi fi-rs-trash table__trash"></i></td>
               </tr>
-              <tr>
-                <td>
-                  <img
-                    src="{% static './assets//img/product-7-1.jpg' %}"
-                    alt=""
-                    class="table__img"
-                  />
-                </td>
-                <td>
-                  <h3 class="table__title">Amazon Essentials Women's Tank</h3>
-                  <p class="table__description">
-                    Lorem ipsum dolor sit amet consectetur.
-                  </p>
-                </td>
-                <td>
-                  <span class="table__price">$110</span>
-                </td>
-                <td><input type="number" value="3" class="quantity" /></td>
-                <td><span class="subtotal">$220</span></td>
-                <td><i class="fi fi-rs-trash table__trash"></i></td>
-              </tr>
-              <tr>
-                <td>
-                  <img
-                    src="{% static './assets//img/product-2-1.jpg' %}"
-                    alt=""
-                    class="table__img"
-                  />
-                </td>
-                <td>
-                  <h3 class="table__title">
-                    Amazon Brand - Daily Ritual Women's Jersey
-                  </h3>
-                  <p class="table__description">
-                    Lorem ipsum dolor sit amet consectetur.
-                  </p>
-                </td>
-                <td>
-                  <span class="table__price">$110</span>
-                </td>
-                <td><input type="number" value="3" class="quantity" /></td>
-                <td><span class="subtotal">$220</span></td>
-                <td><i class="fi fi-rs-trash table__trash"></i></td>
-              </tr>
+              {% endfor %}
             </tbody>
           </table>
         </div>

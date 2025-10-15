@@ -45,8 +45,9 @@ class RegisterForm(forms.Form):
         value = self.cleaned_data['last_name']
 
         if not re.fullmatch(r"[A-Za-z]+", value):
-            raise forms.ValidationError("First name faqat harflardan iborat bo'lishi kerak")
-
+            raise forms.ValidationError("Last name faqat harflardan iborat bo'lishi kerak")
+        
+        return value
 
     def clean_username(self):
         username = self.cleaned_data.get('username')

@@ -96,9 +96,9 @@
             <img src="{% static 'assets/img/icon-heart.svg' %}" alt="" />
             <span class="count">3</span>
           </a>
-          <a href="cart.html" class="header__action-btn" title="Cart">
+          <a href="{% url 'cart_page' %}" class="header__action-btn" title="Cart">
             <img src="{% static 'assets/img/icon-cart.svg' %}" alt="" />
-            <span class="count">3</span>
+            <span class="count" id="cart_count">{{cart_count}}</span>
           </a>
           <div class="header__action-btn nav__toggle" id="nav-toggle">
             <img src="{% static './assets//img/menu-burger.svg' %}" alt="">
