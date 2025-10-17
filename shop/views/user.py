@@ -9,7 +9,7 @@ def accounts(request):
     return render(request, "shop/accounts.html")
 
 
-def cart(request):
+def cart_(request):
     return render(request, "shop/cart.html")
 
 

@@ -81,14 +81,17 @@
             {% endif %}
           </ul>
           <div class="header__search">
-            <input
-              type="text"
-              placeholder="Mahsulotlarni bu yerdan qidiring..."
-              class="form__input"
-            />
-            <button class="search__btn">
-              <img src="{% static 'assets/img/search.png' %}" alt="search icon" />
-            </button>
+            <form method="get">
+                <input
+                type="text"
+                placeholder="Mahsulotlarni bu yerdan qidiring..."
+                class="form__input"
+                name="q"
+                />
+                <button class="search__btn" type="submit">
+                  <img src="{% static 'assets/img/search.png' %}" alt="search icon" />
+                </button>
+            </form>
           </div>
         </div>
         <div class="header__user-actions">

@@ -1,6 +1,7 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404, redirect, render
 from shop.models import Category, Product
 from django.core.paginator import Paginator
+from django.db.models import Q
 from shop.views.cart import Cart
 
 
@@ -21,7 +22,11 @@ def detail(request):
 
 def shop_page(request):
     products = Product.objects.all()
-    paginator = Paginator(products, 2)
+    q = request.GET.get('q')
+    if q:
+        products = Product.objects.filter(Q(name__contains=q) | Q(description__icontains=q))
+
+    paginator = Paginator(products, 8)
     cart = Cart(request)
 
     page = request.GET.get('page')
@@ -31,7 +36,8 @@ def shop_page(request):
     data = {
         "path": "Mahsulotlar",
         "products": page_products,
-        "cart_count": cart.get_quantity()
+        "cart_count": cart.get_quantity(),
+        "count": products.count()
     }
     return render(request, "shop/shop.html", context=data)
 
@@ -44,4 +50,6 @@ def get_products_with_category(request, category_id):
         "products": products,
     }
     return render(request, "shop/category_products.html", context=data)
+
+
 

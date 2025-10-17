@@ -14,29 +14,35 @@
             </thead>
             <tbody>
               {% for product in products %}
-              <tr>
-                    <td>
-                      <img
-                        src="{{product.image.url}}"
-                        alt=""
-                        class="table__img"
-                      />
-                    </td>
-                    <td>
-                      <h3 class="table__title">
-                          {{product.name}}
-                      </h3>
-                      <p class="table__description">
-                        Lorem ipsum dolor sit amet consectetur.
-                      </p>
-                    </td>
-                    <td>
-                      <span class="table__price">$110</span>
-                    </td>
-                    <td><input type="number" value="3" class="quantity" /></td>
+                <tr>
+                  <td>
+                    <img
+                      src="{{product.image.url}}"
+                      alt=""
+                      class="table__img"
+                    />
+                  </td>
+                  <td>
+                    <h3 class="table__title">
+                        {{product.name}}
+                    </h3>
+                    <p class="table__description">
+                      {{ product.description|truncatewords:5 }}
+                    </p>
+                  </td>
+                  <td>
+                    {% if product.discount > 0 %}
+                      <span class="table__price">{{product.discount_price}}</span>
+                      <span class="old__price">&nbsp;{{product.price}}</span>
+                    
+                    {% else %}
+                      <span class="table__price">{{product.price}}</span>
+                    {% endif %}
+                  </td>
+                    <td><input type="number" value="{{product.quantity}}" class="quantity" readonly /></td>
                     <td><span class="subtotal">$220</span></td>
-                    <td><i class="fi fi-rs-trash table__trash"></i></td>
-              </tr>
+                    <td><a href="{% url 'remove_cart_item' product.data.id %}"><i class="fi fi-rs-trash table__trash"></i></a></td>
+                </tr>
               {% endfor %}
             </tbody>
           </table>
@@ -46,7 +52,7 @@
           <a href="#" class="btn flex btn__md">
             <i class="fi-rs-shuffle"></i> Update Cart
           </a>
-          <a href="#" class="btn flex btn__md">
+          <a href="{% url 'shop' %}" class="btn flex btn__md">
             <i class="fi-rs-shopping-bag"></i> Continue Shopping
           </a>
         </div>
@@ -57,8 +63,8 @@
 
         <div class="cart__group grid">
           <div>
-            <div class="cart__shippinp">
-              <h3 class="section__title">Calculate Shipping</h3>
+            <div class="cart__shipping">
+              <h3 class="section__title">Calculate Shopping</h3>
               <form action="" class="form grid">
                 <input
                   type="text"
@@ -91,7 +97,7 @@
                   />
                   <div class="form__btn">
                     <button class="btn flex btn--sm">
-                      <i class="fi-rs-label"></i> Aplly
+                      <i class="fi-rs-label"></i> Apply
                     </button>
                   </div>
                 </div>
