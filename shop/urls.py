@@ -3,6 +3,7 @@ from shop.views import dashboard, detail, accounts, compare, login_register, sho
 from shop.views import  wishilst, profile_user, login_user, logout_user, register_user, shop_page, get_cart_page
 from shop.views.cart import add_to_cart, del_cart_item
 from shop.views.user import cart_
+from shop.views.order import GetCheckoutPage
 
 urlpatterns = [
     path('', dashboard, name="dashboard"),
@@ -25,5 +26,8 @@ urlpatterns = [
     # cart
     path('cart/add/<int:product_id>/', add_to_cart),
     path('cart/', get_cart_page, name="cart_page"),
-    path('remove/', del_cart_item, name="remove cart item")   
+    path('remove/', del_cart_item, name="remove cart item"),
+
+    # Order 
+    path('checkout/', GetCheckoutPage.as_view(), name="checkout")   
 ]

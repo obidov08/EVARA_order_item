@@ -1,6 +1,6 @@
 from django.db import models
 
-from shop.models.products import save
+
 class Category(models.Model):
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to='category_images/', blank=True, null=True)    
@@ -13,7 +13,7 @@ class Product(models.Model):
     name = models.CharField(max_length=200)
     brand = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    discount = models.PositiveBigIntegerField(default=0)
+    discount = models.PositiveIntegerField(default=0)
     description = models.TextField()
     quantity = models.PositiveIntegerField(default=0)
     image = models.ImageField(upload_to='products/', blank=True, null=True)

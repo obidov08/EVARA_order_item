@@ -41,10 +41,12 @@ class Cart:
         for pid, quantity in self.cart.items():
             pd = Product.objects.get(id=pid)
 
-            if pd.discount>0:
+            if pd.discount>0 and pd.discount_price is not None:
                 total = pd.discount_price*quantity
             else:
                 total = pd.price*quantity
+
+            total_with_discount = total
 
             product = {
                 "quantity": quantity,
@@ -52,8 +54,24 @@ class Cart:
                 "total": total,
             }
             products.append(product)
+
+        total_price = 0
+        for product in products:
+            total_price+=product['data'].price*product['quantity']
+
+        data = {
+            "product": products,
+            "total_price": total_price,
+            "total_with_discount": total_with_discount,
+            "profit": total_price-total_with_discount
+        }
         
-        return products
+        return data
+    
+    def clear(self):
+        self.cart.clear()
+        self.session.modified = True
+    
 
 def add_to_cart(request, product_id):
     cart = Cart(request)
