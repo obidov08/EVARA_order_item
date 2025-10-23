@@ -1,9 +1,46 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from shop.forms import LoginForm, RegisterForm
+from django.views.generic import View
+from django.contrib import messages
+from shop.models import Order
+from shop.utils import Cart
 
+
+class ProfileUserView(LoginRequiredMixin, View):
+    def get(self, request):
+        cart = Cart(request)
+
+        orders = Order.objects.filter(user=request.user)
+        orders_with_total = []
+        for order in orders:
+            orders_with_total.append({
+                "order": order,
+                "total": order.get_total()
+            })
+
+        data = {
+            "path": "Profilm",
+            "cart_count": cart.get_quantity(),
+            "oders_with_total": orders_with_total
+        }
+        return render(request, "shop/accounts.html", context=data)
+
+    def post(self, request):
+            user = request.user
+            first_name = request.POST.get()
+            last_name = request.POST.get()
+
+            if first_name and last_name:
+                user.first_name = first_name
+                user.last_name = last_name
+                user.save()
+                messages.success(request, "Profil ma'lumotlari yangilandi")
+
+            messages.warning(request, "First name va Last name kiritilsin")
+            return redirect("profile")
 
 def accounts(request):
     return render(request, "shop/accounts.html")
@@ -24,17 +61,34 @@ def login_register(request):
 def wishilst(request):
     return render(request, "shop/wishlist.html")
 
-@login_required
-def profile_user(request):
-    data = {
-        "path": "Profilm"
-    }
-    return render(request, "shop/accounts.html", context=data)
+
+class ChangePasswordView(View):
+    def post(self, request):
+        old_password = request.POST.get("old_password")
+        new_password = request.POST.get("new_password")
+        repead_new_password = request.POST.get("repead_new_password")
+
+        user = request.user
+        if user.check_passowrd(old_password) and new_password==repead_new_password:
+            user.set_password(new_password)
+            user.save()
+            print("To'g'ri")
+
+        return redirect("dashboard")
 
 
-def login_user(request):
+class LoginUserView(View):
+    def get(self, request):
+        form = LoginForm()
+        data = {
+                    "path": "Login",
+                    "form": form,
+                }
+        
+        return render(request, "shop/login-register.html", context=data)
 
-    if request.method == "POST":
+
+    def post(self, request):
         form = LoginForm(request.POST)
 
         if form.is_valid():
@@ -44,27 +98,29 @@ def login_user(request):
             user = authenticate(request, username=username, password=password) 
             if user is not None:
                 login(request, user)
+                messages.success(request, "Siz muvoffaqqiyatli login qildingiz")
                 return redirect("dashboard")
-        
-        else:
+            
+            messages.error(request, "Login yoki parol xato")
+            
             data = {
                 "path": "Login",
                 "form": form,
+                "error": "Foydalanuvchi nomi yoki paroli xato!"
             }
             return render(request, "shop/login-register.html", context=data)
         
-    form = LoginForm()
-
-    data = {
-                "path": "Login",
-                "form": form,
-            }
-    
-    return render(request, "shop/login-register.html", context=data)
+        data = {
+                    "path": "Login",
+                    "form": form,
+                    "error": "Formani to'g'ri to'ldiring."
+        }
+        return render(request, "shop/login-register.html", context=data)
 
         
 def logout_user(request):
     logout(request)
+    messages.success(request, "Siz tizimdan chiqdingiz!")
     return redirect("dashboard")
 
 

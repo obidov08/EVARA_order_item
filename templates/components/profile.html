@@ -17,40 +17,40 @@
         <p class="account__tab" data-target="#change-password">
             <i class="fi fi-rs-settings-sliders"></i> Change Password
         </p>
-        <p class="account__tab"><i class="fi fi-rs-exit"></i> Logout</p>
+        <a href="{% url 'logout_user' %}"></a><p class="account__tab"><i class="fi fi-rs-exit"></i> Logout</p>
         </div>
         <div class="tabs__content">
         <div class="tab__content active-tab" content id="dashboard">
             <h3 class="tab__header">Assalomu alykum, {{request.user.username}}</h3>
             <div class="tab__body">
             <p class="tab__description"> 
-                From your account dashboard. you can easily check & view your
-                recent order, manage your shipping and billing addresses and
-                edit your password and account details
+                Hisobingiz boshqaruv panelidan siz osongina tekshirishingiz va ko'rishingiz mumkin so'nggi buyurtmangizni, yetkazib berish va to'lov manzillaringizni boshqarishingiz hamda parolingiz va hisob ma'lumotlaringizni tahrirlashingiz mumkin
             </p>
             </div>
         </div>
         <div class="tab__content" content id="orders">
-            <h3 class="tab__header">Your Orders</h3>
+            <h3 class="tab__header">Buyurtmalaringiz</h3>
             <div class="tab__body">
             <table class="placed__order-table">
                 <thead>
                 <tr>
-                    <th>Orders</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>Totals</th>
-                    <th>Actions</th>
+                    <th>ID</th>
+                    <th>SANA</th>
+                    <th>STATUS</th>
+                    <th>UMUMIY NARX</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>#1357</td>
-                    <td>March 19, 2022</td>
-                    <td>Processing</td>
-                    <td>$125.00</td>
-                    <td><a href="#" class="view__order">View</a></td>
-                </tr>
+                
+                    {% for order in orders_with_total %}
+                        <tr>
+                            <td>#{{order.data.id}}</td>
+                            <td>{{order.data.created_at}}</td>
+                            <td>{{order.data.status}}</td>
+                            <td>${{order.total}}</td>
+                        </tr>
+                    {% endfor %}
+
                 <tr>
                     <td>#2468</td>
                     <td>June 29, 2022</td>
@@ -72,52 +72,64 @@
         <div class="tab__content" content id="update-profile">
             <h3 class="tab__header">Update Profile</h3>
             <div class="tab__body">
-            <form class="form grid">
+            <form class="form grid" method="post">
+                {% csrf_token %}
                 <input
                 type="text"
                 placeholder="Username"
                 class="form__input"
+                value="{{request.user.username}}"
+                readonly
+                required
+                />
+                <input
+                type="text"
+                placeholder="Firstname"
+                class="form__input"
+                name="firstname"
+                value="{{request.user.first_name}}"
+                required
+                />
+                <input
+                type="text"
+                placeholder="Lastname"
+                class="form__input"
+                name="lastname"
+                value="{{request.user.last_name}}"
+                required
                 />
                 <div class="form__btn">
-                <button class="btn btn--md">Save</button>
+                <button class="btn btn--md" type="submit">Save</button>
                 </div>
             </form>
             </div>
         </div>
-        <div class="tab__content" content id="address">
-            <h3 class="tab__header">Shipping Address</h3>
-            <div class="tab__body">
-            <address class="address">
-                3522 Interstate <br />
-                75 Business Spur, <br />
-                Sault Ste. <br />
-                Marie, Mi 49783
-            </address>
-            <p class="city">New York</p>
-            <a href="#" class="edit">Edit</a>
-            </div>
-        </div>
+
         <div class="tab__content" content id="change-password">
             <h3 class="tab__header">Change Password</h3>
             <div class="tab__body">
-            <form class="form grid">
+            <form class="form grid" method="post" action="{% url 'change_password' %}">
+                {% csrf_token %}
                 <input
                 type="password"
                 placeholder="Current Password"
                 class="form__input"
+                name="old_password"
                 />
                 <input
                 type="password"
                 placeholder="New Password"
                 class="form__input"
+                name="new_password"
                 />
                 <input
                 type="password"
                 placeholder="Confirm Password"
                 class="form__input"
+                name="repeat_new_password"
                 />
                 <div class="form__btn">
-                <button class="btn btn--md">Save</button>
+                <button class="btn btn--md" type="submit">Save</button>
                 </div>
             </form>
             </div>

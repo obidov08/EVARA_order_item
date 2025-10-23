@@ -20,6 +20,49 @@
     <!--=============== CSS ===============-->
     <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}" />
 
+    <style>
+      /* Toast container - ekranning o'ng yuqorisida joylashadi */
+      #toast-container {
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          z-index: 9999;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+      }
+      
+      /* Toast asosiy dizayni */
+      .toast {
+          background-color: #333;
+          color: white;
+          padding: 14px 18px;
+          border-radius: 8px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+          opacity: 0;
+          transform: translateX(100%);
+          animation: slideIn 0.5s forwards, fadeOut 0.5s 2.5s forwards;
+      }
+      
+      /* Turli statuslar uchun ranglar */
+      .toast.success { background-color: #3ac65a; } /* yashil */
+      .toast.error { background-color: #dc3545; } /* qizil */
+      .toast.warning { background-color: #ffc107; color: #222; } /* sariq */
+      .toast.info { background-color: #17a2b8; } /* ko'k */
+      
+      /* Kirish animatsiyasi */
+      @keyframes slideIn {
+          from { opacity: 0; transform: translateX(100%); }
+          to { opacity: 1; transform: translateX(0); }
+      }
+      
+      /* 3 sekunddan keyin chiqib ketish animatsiyasi */
+      @keyframes fadeOut {
+          from { opacity: 1; transform: translateX(0); }
+          to { opacity: 0; transform: translateX(100%); }
+      }
+      </style>
+
     <title>Ecommerce Website</title>
   </head>
   <body>
@@ -45,6 +88,16 @@
                 </div> 
             </div>
           </div>
+      {% endif %}
+
+      {% if messages %}
+        <div id="toast-container">
+            {% for message in messages %}
+            <div class="toast {{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
       {% endif %}
 
       <nav class="nav container">
@@ -216,5 +269,17 @@
 
     <!--=============== MAIN JS ===============-->
     <script src="{% static 'assets/js/main.js' %}"></script>
+    <script>
+      document.querySelectorAll('.toast').forEach(toast => {
+        setTimeout(() => {
+            toast.remove();
+        }, 5000); // 5 soniya
+    
+        // Foydalanuvchi bosganda ham yopilsin
+        toast.addEventListener('click', () => {
+            toast.remove();
+        });
+    });
+    </script>
   </body>
 </html>
